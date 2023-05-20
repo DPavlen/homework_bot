@@ -1,5 +1,11 @@
-...
+import logging
+import os
+import requests
 
+from telegram import ReplyKeyboardMarkup
+from telegram.ext import CommandHandler, Updater
+
+from dotenv import load_dotenv
 load_dotenv()
 
 
