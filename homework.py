@@ -2,6 +2,7 @@ import logging
 import os
 import requests
 
+from logging.handlers import RotatingFileHandler
 from telegram import ReplyKeyboardMarkup
 from telegram.ext import CommandHandler, Updater
 
@@ -23,6 +24,29 @@ HOMEWORK_VERDICTS = {
     'reviewing': 'Работа взята на проверку ревьюером.',
     'rejected': 'Работа проверена: у ревьюера есть замечания.'
 }
+
+# А тут установлены настройки логгера для текущего файла - example_for_log.py
+logger = logging.getLogger(__name__)
+# Здесь задана глобальная конфигурация для всех логгеров
+logging.basicConfig(
+    level=logging.DEBUG,
+    filename='program.log',
+    format='%(asctime)s, %(levelname)s, %(message)s, %(name)s'
+)
+# Создаем форматер
+formatter = logging.Formatter(
+    '%(asctime)s - %(levelname)s - %(message)s'
+)
+# Указываем обработчик логов
+handler = RotatingFileHandler(
+    'bot.log',
+    maxBytes=50000000,
+    encoding='UTF-8'
+    # backupCount=5,
+)
+
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
 
 def check_tokens():
