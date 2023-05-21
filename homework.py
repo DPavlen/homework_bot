@@ -14,8 +14,7 @@ from dotenv import load_dotenv
 from exceptions_api_answer import (StatusOtherThan200Error,
                                    ApiRequestError,
                                    UnexpectedError,
-                                   JSONDecodeError,
-                                   EmptyResponseFromAPI,
+                                   JSONDecodeError
                                    )
 
 load_dotenv()
