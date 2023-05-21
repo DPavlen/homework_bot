@@ -1,14 +1,20 @@
+import json
 import logging
 import os
 import requests
 
+from http import HTTPStatus
 from logging.handlers import RotatingFileHandler
-from telegram import ReplyKeyboardMarkup
-from telegram.ext import CommandHandler, Updater
 from sys import exit as kill_bot
-from telegram import Bot, TelegramError
+from telegram import TelegramError
 
 from dotenv import load_dotenv
+
+from exceptions_api_answer import (StatusOtherThan200Error,
+                                   ApiRequestError,
+                                   UnexpectedError,
+                                   JSONDecodeError)
+
 load_dotenv()
 
 # secret_token = os.getenv('TOKEN')
@@ -54,7 +60,7 @@ logger.addHandler(handler)
 def check_tokens():
     """Проверка доступности переменных окружения,
     которые необходимы для работы программы."""
-    # Создадим словарь токенов и переберем в цикле
+    # Создадим словарь токенов и переберем в цикле c флагом
     names_tokens = {
         'PRACTICUM_TOKEN': PRACTICUM_TOKEN,
         'TELEGRAM_TOKEN': TELEGRAM_TOKEN,
@@ -84,8 +90,30 @@ def send_message(bot, message):
 
 
 def get_api_answer(timestamp):
-    """Делает запрос к единственному эндпоинту API-сервиса."""
-    ...
+    """Делает запрос к единственному эндпоинту API-сервиса.
+    Получение ответа от Яндекс-Практикума."""
+    try:
+        api_answer_yandex = requests.get(
+            ENDPOINT,
+            headers=HEADERS,
+            params={'from_date': timestamp}
+        )
+        logger.debug('Отправка запроса.')
+        if api_answer_yandex.status_code != HTTPStatus.OK:
+            msg_error = (f'API Эндпойнт{ENDPOINT} в данный момент недоступен, '
+                         f'код ошибки: {api_answer_yandex.status_code}')
+            raise StatusOtherThan200Error(msg_error)
+        logger.debug('Запрос успешно отправлен.')
+
+        return api_answer_yandex.json()
+
+    except requests.exceptions.RequestException as error_request:
+        msg_error = f'Ошибка при запросе к API: {error_request}'
+        raise ApiRequestError(msg_error)
+
+    except json.JSONDecodeError as error_json:
+        msg_error = f'Ошибка при преобразовании JSON: {error_json}'
+        raise JSONDecodeError(msg_error)
 
 
 def check_response(response):
