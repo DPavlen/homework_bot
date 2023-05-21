@@ -162,14 +162,24 @@ def main():
     check_tokens()
     bot = Bot(token=TELEGRAM_TOKEN)
     timestamp = int(time.time())
+    current_report = {
+        'name': '',
+        'output': ''
+    }
 
     while True:
         try:
             response = get_api_answer(timestamp)
             timestamp = response.get('current_date')
-            # homeworks = response.get('homeworks')
-            check_response(response)
+            new_homeworks = check_response(response)
+            # check_response(response)
             logger.debug('Запрос проверен.')
+            if new_homeworks:
+                homework = new_homeworks[0]
+                current_report['name'] = homework.get('homework_name')
+                current_report['output'] = homework.get('status')
+            else:
+                current_report['output'] = 'Новых статусов работ Нет!'
 
         except TelegramError as error:
             logger.error(f'Сообщение не удалось отправить! {error}')
