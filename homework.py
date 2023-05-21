@@ -12,8 +12,9 @@ from dotenv import load_dotenv
 
 from exceptions_api_answer import (StatusOtherThan200Error,
                                    ApiRequestError,
-                                   UnexpectedError,
-                                   JSONDecodeError)
+                                   # UnexpectedError,
+                                   JSONDecodeError,
+                                   EmptyResponseFromAPI,)
 
 load_dotenv()
 
@@ -119,14 +120,38 @@ def get_api_answer(timestamp):
 def check_response(response):
     """Проверяет ответ API на соответствие документации
     из урока API сервиса Практикум.Домашка."""
-    ...
+    logging.debug('Начало проверки Домашки')
+
+    if not isinstance(response, dict):
+        raise TypeError('Ошибка в типе ответа API')
+
+    if 'homeworks' not in response:
+        raise EmptyResponseFromAPI('Пустой ответ от API')
+
+    homeworks = response.get('homeworks')
+    if not isinstance(homeworks, list):
+        raise KeyError('Homeworks не является списком')
+    return homeworks
 
 
 def parse_status(homework):
     """Извлекает из информации о конкретной
     домашней работе статус этой работы."""
-    ...
+    homework_all = ('homework_name', 'status')
+    for homework_key in homework_all:
+        if homework_key not in homework:
+            message = f'В ответе API отсутсвует ключ "{homework_key}".'
+            logger.error(message)
+            raise KeyError(message)
 
+    homework_name = homework.get('homework_name')
+    homework_status = homework.get('status')
+
+    if homework_status not in HOMEWORK_VERDICTS:
+        message = f'Неизвестный статус работы ревью: {homework_status}'
+        raise ValueError(message)
+
+    verdict = HOMEWORK_VERDICTS[homework_status]
     return f'Изменился статус проверки работы "{homework_name}". {verdict}'
 
 

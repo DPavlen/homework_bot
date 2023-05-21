@@ -16,3 +16,8 @@ class UnexpectedError(Exception):
 class JSONDecodeError(Exception):
     """Ошибка с преобразованием файла JSON."""
     pass
+
+
+class EmptyResponseFromAPI(NotForSending):
+    """Пустой ответ от API."""
+    pass
