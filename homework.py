@@ -130,9 +130,9 @@ def check_response(response):
         raise TypeError(msg)
 
     if 'homeworks' not in response:
-        msg = 'Ошибка в типе ответа API'
+        msg = 'Нет ключа в ответе API'
         logger.error(msg)
-        raise KeyError('Пустой ответ от API')
+        raise KeyError(msg)
         # raise EmptyResponseFromAPI('Пустой ответ от API')
 
     homeworks = response.get('homeworks')
@@ -184,8 +184,12 @@ def main():
                 homework = new_homeworks[0]
                 current_report['name'] = homework.get('homework_name')
                 current_report['output'] = homework.get('status')
+                message = parse_status(homework)
+                send_message(bot, message)
+                logger.debug(f'Пользователю отправлено: {message}')
             else:
                 current_report['output'] = 'Новых статусов работ Нет!'
+                logger.debug(current_report['output'])
 
         except TelegramError as error:
             logger.error(f'Сообщение не удалось отправить! {error}')
