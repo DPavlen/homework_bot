@@ -85,7 +85,7 @@ def send_message(bot, message):
     """Отправка сообщения в чат, определяемая TELEGRAM_CHAT_ID."""
     try:
         bot.send_message(TELEGRAM_CHAT_ID, message)
-        logging.debug(f'Отправляет сообщение пользователю:{message}')
+        logger.debug(f'Отправляет сообщение пользователю:{message}')
     except TelegramError as telegram_error:
         logger.error(f'Сообщение в Telegram не отправлено: {telegram_error}')
 
@@ -151,7 +151,7 @@ def parse_status(homework):
 
     if homework_status not in HOMEWORK_VERDICTS:
         message = f'Неизвестный статус работы ревью: {homework_status}'
-        raise ValueError(message)
+        raise KeyError(message)
 
     verdict = HOMEWORK_VERDICTS[homework_status]
     return f'Изменился статус проверки работы "{homework_name}". {verdict}'
