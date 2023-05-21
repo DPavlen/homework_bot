@@ -133,8 +133,7 @@ def check_response(response):
 
 
 def parse_status(homework):
-    """Извлекает из информации о конкретной
-    домашней работе статус этой работы."""
+    """Информация о домашней работе и ее статус."""
     homework_all = ('homework_name', 'status')
     for homework_key in homework_all:
         if homework_key not in homework:
@@ -159,8 +158,6 @@ def main():
     bot = Bot(token=TELEGRAM_TOKEN)
     timestamp = int(time.time())
 
-    ...
-
     while True:
         try:
             response = get_api_answer(timestamp)
@@ -169,7 +166,6 @@ def main():
             check_response(response)
             logger.debug('Запрос проверен.')
 
-            ...
         except TelegramError as error:
             logger.error(f'Сообщение не удалось отправить! {error}')
 
