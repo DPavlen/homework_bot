@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 
 from exceptions_api_answer import (StatusOtherThan200Error,
                                    ApiRequestError,
-                                   # UnexpectedError,
+                                   UnexpectedError,
                                    JSONDecodeError,
                                    EmptyResponseFromAPI,
                                    )
@@ -85,7 +85,7 @@ def send_message(bot, message):
     """Отправка сообщения в чат, определяемая TELEGRAM_CHAT_ID."""
     try:
         bot.send_message(TELEGRAM_CHAT_ID, message)
-        logging.info(f'Отправляет сообщение пользователю:{message}')
+        logging.debug(f'Отправляет сообщение пользователю:{message}')
     except TelegramError as telegram_error:
         logger.error(f'Сообщение в Telegram не отправлено: {telegram_error}')
 
@@ -114,6 +114,11 @@ def get_api_answer(timestamp):
     except json.JSONDecodeError as error_json:
         msg_error = f'Ошибка при преобразовании JSON: {error_json}'
         raise JSONDecodeError(msg_error)
+
+    except Exception as error:
+        msg_error = UnexpectedError(error)
+        logger.error(msg_error)
+        raise msg_error
 
 
 def check_response(response):
