@@ -18,6 +18,6 @@ class JSONDecodeError(Exception):
     pass
 
 
-class EmptyResponseFromAPI(NotForSending):
+class EmptyResponseFromAPI(Exception):
     """Пустой ответ от API."""
     pass

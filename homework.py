@@ -1,12 +1,13 @@
 import json
 import logging
 import os
+import time
 import requests
 
 from http import HTTPStatus
 from logging.handlers import RotatingFileHandler
 from sys import exit as kill_bot
-from telegram import TelegramError
+from telegram import Bot, TelegramError
 
 from dotenv import load_dotenv
 
@@ -14,7 +15,8 @@ from exceptions_api_answer import (StatusOtherThan200Error,
                                    ApiRequestError,
                                    # UnexpectedError,
                                    JSONDecodeError,
-                                   EmptyResponseFromAPI,)
+                                   EmptyResponseFromAPI,
+                                   )
 
 load_dotenv()
 
@@ -157,23 +159,33 @@ def parse_status(homework):
 
 def main():
     """Основная логика работы бота."""
-
-    ...
-
-    bot = telegram.Bot(token=TELEGRAM_TOKEN)
+    check_tokens()
+    bot = Bot(token=TELEGRAM_TOKEN)
     timestamp = int(time.time())
 
     ...
 
     while True:
         try:
+            response = get_api_answer(timestamp)
+            timestamp = response.get('current_date')
+            # homeworks = response.get('homeworks')
+            check_response(response)
+            logger.debug('Запрос проверен.')
 
             ...
+        except TelegramError as error:
+            logger.error(f'Сообщение не удалось отправить! {error}')
 
         except Exception as error:
+            last_error = ''
             message = f'Сбой в работе программы: {error}'
-            ...
-        ...
+            logger.error(message, error)
+            if message != last_error:
+                last_error = message
+                send_message(bot, message)
+        finally:
+            time.sleep(RETRY_PERIOD)
 
 
 if __name__ == '__main__':
