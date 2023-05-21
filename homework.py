@@ -123,17 +123,24 @@ def get_api_answer(timestamp):
 
 def check_response(response):
     """Проверяет ответ API на соответствие документации."""
-    logging.debug('Начало проверки Домашки')
+    # logging.debug('Начало проверки Домашки')
 
     if not isinstance(response, dict):
-        raise TypeError('Ошибка в типе ответа API')
+        msg = 'Ошибка в типе ответа API'
+        logger.error(msg)
+        raise TypeError(msg)
 
     if 'homeworks' not in response:
-        raise EmptyResponseFromAPI('Пустой ответ от API')
+        msg = 'Ошибка в типе ответа API'
+        logger.error(msg)
+        raise KeyError('Пустой ответ от API')
+        # raise EmptyResponseFromAPI('Пустой ответ от API')
 
     homeworks = response.get('homeworks')
     if not isinstance(homeworks, list):
-        raise KeyError('Homeworks не является списком')
+        msg = ('Проверка ответа API списка')
+        logger.error(msg)
+        raise TypeError(msg)
     return homeworks
 
 
