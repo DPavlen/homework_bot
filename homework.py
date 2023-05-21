@@ -61,8 +61,7 @@ logger.addHandler(handler)
 
 
 def check_tokens():
-    """Проверка доступности переменных окружения,
-    которые необходимы для работы программы."""
+    """Проверка доступности переменных окружения."""
     # Создадим словарь токенов и переберем в цикле c флагом
     names_tokens = {
         'PRACTICUM_TOKEN': PRACTICUM_TOKEN,
@@ -83,8 +82,7 @@ def check_tokens():
 
 
 def send_message(bot, message):
-    """Отправляет сообщение в Telegram чат,
-    определяемый переменной окружения TELEGRAM_CHAT_ID."""
+    """Отправка сообщения в чат, определяемая TELEGRAM_CHAT_ID."""
     try:
         bot.send_message(TELEGRAM_CHAT_ID, message)
         logging.info(f'Отправляет сообщение пользователю:{message}')
@@ -93,8 +91,7 @@ def send_message(bot, message):
 
 
 def get_api_answer(timestamp):
-    """Делает запрос к единственному эндпоинту API-сервиса.
-    Получение ответа от Яндекс-Практикума."""
+    """Получение ответа от Яндекс-Практикума."""
     try:
         api_answer_yandex = requests.get(
             ENDPOINT,
@@ -120,8 +117,7 @@ def get_api_answer(timestamp):
 
 
 def check_response(response):
-    """Проверяет ответ API на соответствие документации
-    из урока API сервиса Практикум.Домашка."""
+    """Проверяет ответ API на соответствие документации."""
     logging.debug('Начало проверки Домашки')
 
     if not isinstance(response, dict):
