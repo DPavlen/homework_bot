@@ -1,4 +1,3 @@
-import json
 import logging
 import os
 import time
@@ -12,8 +11,6 @@ from telegram import Bot, TelegramError
 
 from exceptions_api_answer import (StatusOtherThan200Error,
                                    ApiRequestError,
-                                   # UnexpectedError,
-                                   # JSONDecodeError
                                    )
 
 load_dotenv()
@@ -93,15 +90,6 @@ def get_api_answer(timestamp):
         msg_error = f'Ошибка при запросе к API: {error_request}'
         raise ApiRequestError(msg_error)
 
-    # except json.JSONDecodeError as error_json:
-    #    msg_error = f'Ошибка при преобразовании JSON: {error_json}'
-    #    raise JSONDecodeError(msg_error)
-
-    # except Exception as error:
-    #    msg_error = UnexpectedError(error)
-    #    logger.error(msg_error)
-    #    raise msg_error
-
 
 def check_response(response):
     """Проверяет ответ API на соответствие документации."""
@@ -171,9 +159,6 @@ def main():
             else:
                 current_report['output'] = 'Новых статусов работ Нет!'
                 logger.debug(current_report['output'])
-
-        # except TelegramError as error:
-        #    logger.error(f'Сообщение не удалось отправить! {error}')
 
         except Exception as error:
             last_error = ''
