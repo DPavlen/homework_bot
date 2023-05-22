@@ -49,14 +49,14 @@ def check_tokens():
         'TELEGRAM_TOKEN': TELEGRAM_TOKEN,
         'TELEGRAM_CHAT_ID': TELEGRAM_CHAT_ID,
     }
-    token_flag = False
+    token_bool: bool = False
     for name_token, token in names_tokens.items():
         if not token:
-            token_flag = True
+            token_bool = True
             no_tokens_msg = (f'Бот не работает!'
                              f'Отсутствует переменная окружения:{name_token}!')
             logger.critical(no_tokens_msg)
-    if token_flag:
+    if token_bool:
         exit(no_tokens_msg)
 
 
@@ -149,11 +149,10 @@ def main():
             check_response(response)
             logger.debug('Запрос проверен.')
             if new_homeworks:
-                # homework = new_homeworks[0]
                 homework, *_ = new_homeworks
+                message = parse_status(homework)
                 current_report['name'] = homework.get('homework_name')
                 current_report['output'] = homework.get('status')
-                message = parse_status(homework)
                 send_message(bot, message)
                 logger.debug(f'Пользователю отправлено: {message}')
             else:
