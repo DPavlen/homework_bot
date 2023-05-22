@@ -150,7 +150,7 @@ def main():
             logger.debug('Запрос проверен.')
             if new_homeworks:
                 # homework = new_homeworks[0]
-                homework, *homework = new_homeworks
+                homework, *_ = new_homeworks
                 current_report['name'] = homework.get('homework_name')
                 current_report['output'] = homework.get('status')
                 message = parse_status(homework)
