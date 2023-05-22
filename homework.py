@@ -49,14 +49,14 @@ def check_tokens():
         'TELEGRAM_TOKEN': TELEGRAM_TOKEN,
         'TELEGRAM_CHAT_ID': TELEGRAM_CHAT_ID,
     }
-    token_bool: bool = False
+    is_token: bool = False
     for name_token, token in names_tokens.items():
         if not token:
-            token_bool = True
+            is_token = True
             no_tokens_msg = (f'Бот не работает!'
                              f'Отсутствует переменная окружения:{name_token}!')
             logger.critical(no_tokens_msg)
-    if token_bool:
+    if is_token:
         exit(no_tokens_msg)
 
 
