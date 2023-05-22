@@ -93,7 +93,6 @@ def get_api_answer(timestamp):
 
 def check_response(response):
     """Проверяет ответ API на соответствие документации."""
-
     if not isinstance(response, dict):
         msg = 'Ошибка в типе ответа API'
         logger.error(msg)
