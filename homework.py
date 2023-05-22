@@ -145,7 +145,8 @@ def main():
         try:
             response = get_api_answer(timestamp)
             timestamp = response.get('current_date')
-            new_homeworks = check_response(response)
+            new_homeworks = response.get('homeworks')
+            check_response(response)
             logger.debug('Запрос проверен.')
             if new_homeworks:
                 # homework = new_homeworks[0]
